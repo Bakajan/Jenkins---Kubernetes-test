@@ -1,0 +1,24 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins:latest
+    container_name: jenkins
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./FOR_JENKINS:/var/jenkins_home
+  etcd:
+    image: kubernetes/etcd:latest
+    container_name: etcd
+    network_mode: "host"
+    volumes:
+      - ./etcd:/var/etcd/data
+    command: etcd --addr=$$(hostname -i):4001 --bind-addr=0.0.0.0:4001 --data-dir=/var/etcd/data
+#  master:
+#    image: gcr.io/google-containers/hyperkube:dev
+#    container_name: master
+#    network_mode: "host"
+#    volumes:
+#      - ./etcd:/var/run/docker.sock
+#    command: kubelet --api_servers=http://localhost:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=127.0.0.1 --config=/etc/kubernetes/manifests
